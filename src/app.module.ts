@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from './config/index';
 import { EnvironmentVariablesSchema } from './config/index';
+import { Config } from './config/variables';
 
 @Module({
   imports: [
@@ -25,4 +26,10 @@ import { EnvironmentVariablesSchema } from './config/index';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(private readonly configService: ConfigService) {}
+
+  onModuleInit() {
+    Config.init(this.configService); // Initialize EnvConfig with ConfigService
+  }
+}
