@@ -11,7 +11,7 @@ export class Config {
     return {
       environment: this.configService.get<string>('NODE_ENV', 'development'),
       port: this.configService.get<number>('PORT', 3000),
-      databaseURL: this.configService.get<string>('DATABASE_URI'),
+      databaseURL: this.configService.get<string>('DATABASE_URL'),
       tokenInfo: {
         accessTokenValidity: this.configService.get<number>(
           'ACCESS_TOKEN_VALIDITY_DAYS',

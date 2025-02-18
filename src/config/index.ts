@@ -1,5 +1,3 @@
-import * as Joi from 'joi';
-
 export interface EnvironmentVariables {
   NODE_ENV: string;
   PORT: string;
@@ -62,28 +60,3 @@ export const EnvironmentVariables = (): EnvironmentVariables => ({
   CLIENT_URL: process.env.CLIENT_URL || '',
   LOG_DIR: process.env.LOG_DIR || '',
 });
-
-export const EnvironmentVariablesSchema = Joi.object<EnvironmentVariables>({
-  NODE_ENV: Joi.string()
-    .valid('development', 'production', 'test')
-    .default('development'),
-  PORT: Joi.number().integer().min(1).max(65535).default(3000),
-  DATABASE_URL: Joi.string().uri().required(),
-  ACCESS_TOKEN_VALIDITY_DAYS: Joi.number().integer().min(0).required(),
-  REFRESH_TOKEN_VALIDITY_DAYS: Joi.number().integer().min(0).required(),
-  TOKEN_ISSUER: Joi.string().required(),
-  TOKEN_AUDIENCE: Joi.string().required(),
-  AWS_SES_HOST: Joi.string().hostname().required(),
-  AWS_SES_USERNAME: Joi.string().required(),
-  AWS_SES_PASSWORD: Joi.string().required(),
-  AWS_S3_BUCKET_NAME: Joi.string().required(),
-  AWS_ACCESS_KEY_ID: Joi.string().required(),
-  AWS_SECRET_ACCESS_KEY: Joi.string().required(),
-  AWS_S3_REGION: Joi.string().required(),
-  RESET_TOKEN_VALIDITY_HOURS: Joi.number().integer().min(0).required(),
-  PRIVATE_KEY: Joi.string().required(),
-  PUBLIC_KEY: Joi.string().required(),
-  SYSTEM_EMAIL_ID: Joi.string().email().required(),
-  CLIENT_URL: Joi.string().uri().required(),
-  LOG_DIR: Joi.string().required(),
-}).unknown(true);
