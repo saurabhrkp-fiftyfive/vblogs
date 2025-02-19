@@ -1,11 +1,12 @@
+import { LoggerModule } from './infra/logger/logger.module';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
-import Configuration from './config/index';
+import { DatabaseModule } from './infra/database/database.module';
+import { AppConfigModule } from './config/config.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ load: [Configuration] })],
+  imports: [AppConfigModule, LoggerModule, DatabaseModule],
   controllers: [AppController],
   providers: [AppService],
 })
