@@ -27,19 +27,20 @@ export class WinstonLoggerService implements LoggerService, OnModuleDestroy {
     const consoleTransports = new transports.Console({
       format: format.combine(
         format.errors({ stack: true }),
-        format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        format.timestamp({ format: 'DD/MM/YYYY, h:mm:ss A' }),
         // Use the passed context if available; otherwise fall back to this.context.
         format.printf((info: TransformableInfo) => {
           const { level, message, timestamp, context, stack } = info;
           // Cast each variable to a string using String()
           const logTimestamp = String(timestamp);
-          const logLevel = String(level);
+          const logLevel = String(level).toUpperCase();
           const logMessage = String(message);
           const logContext = context ? String(context) : this.context;
+
           if (stack)
-            return `${logTimestamp} [${logContext}] ${level}: ${logMessage}\n${String(stack)}`; // Custom format for error logs
+            return `[Nest] ${process.pid}  - ${logTimestamp}    ${logLevel} [${logContext}] ${logMessage}\n${String(stack)}`; // Custom format for error logs
           // Use the passed context if available; otherwise fall back to this.context (cast to string)
-          return `${logTimestamp} [${logContext}] ${logLevel}: ${logMessage}`;
+          return `[Nest] ${process.pid}  - ${logTimestamp}    ${logLevel} [${logContext}] ${logMessage}`;
         }),
       ),
     });
