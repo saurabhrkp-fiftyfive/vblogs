@@ -1,7 +1,7 @@
 export default () => ({
   environment: process.env.NODE_ENV || 'development',
   port: process.env.PORT || '3000',
-  databaseURL: process.env.DATABASE_URL,
+  databaseURI: process.env.DATABASE_URI,
   tokenInfo: {
     accessTokenValidity:
       (process.env.ACCESS_TOKEN_VALIDITY_DAYS
