@@ -1,24 +1,12 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { EnvironmentVariables } from './config/index';
-import { Config } from './config/variables';
+import { ConfigModule } from '@nestjs/config';
+import Configuration from './config/index';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [EnvironmentVariables],
-    }),
-  ],
+  imports: [ConfigModule.forRoot({ load: [Configuration] })],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements OnModuleInit {
-  constructor(private readonly configService: ConfigService) {}
-
-  onModuleInit() {
-    Config.init(this.configService);
-  }
-}
+export class AppModule {}
