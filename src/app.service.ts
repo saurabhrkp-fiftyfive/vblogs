@@ -4,7 +4,7 @@ import { WinstonLoggerService } from './infra/logger/logger.service';
 @Injectable()
 export class AppService {
   constructor(private readonly logger: WinstonLoggerService) {
-    this.logger.setContext(AppService.name);
+    this.logger = new WinstonLoggerService(AppService.name);
   }
 
   getHello(): string {
