@@ -4,9 +4,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './infra/database/database.module';
 import { AppConfigModule } from './config/config.module';
+import { AwsS3Module } from './infra/s3/s3.module';
 
 @Module({
-  imports: [AppConfigModule, LoggerModule, DatabaseModule],
+  imports: [AppConfigModule, LoggerModule, DatabaseModule, AwsS3Module],
   controllers: [AppController],
   providers: [AppService],
 })
