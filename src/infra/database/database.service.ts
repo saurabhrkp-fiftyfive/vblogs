@@ -22,9 +22,24 @@ export class DatabaseService implements OnModuleInit, OnApplicationShutdown {
       const databaseURI = this.configService.get<string>('databaseURI');
       // Check if databaseURI is undefined before passing it to mongoose.connect
       if (databaseURI) {
+        mongoose.connection.on('connected', () =>
+          this.logger.log('Database connected successfully.'),
+        );
+        mongoose.connection.on('open', () =>
+          this.logger.log('Database Connection Open.'),
+        );
+        mongoose.connection.on('disconnected', () =>
+          this.logger.log('Database disconnected'),
+        );
+        mongoose.connection.on('reconnected', () =>
+          this.logger.log('Database reconnected'),
+        );
+        mongoose.connection.on('disconnecting', () =>
+          this.logger.log('Database disconnecting'),
+        );
+
         await mongoose.connect(databaseURI);
         this.connection = mongoose.connection;
-        this.logger.log('Database connected successfully.');
       } else {
         this.logger.error('Database URI is undefined.');
       }
