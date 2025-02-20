@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { WinstonLoggerService } from './infra/logger/logger.service';
+import { WinstonLoggerService } from '../../infra/logger/logger.service';
 
 @Injectable()
 export class AppService {
