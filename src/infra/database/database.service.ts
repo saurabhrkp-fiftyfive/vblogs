@@ -15,7 +15,7 @@ export class DatabaseService implements OnModuleInit, OnApplicationShutdown {
     private readonly configService: ConfigService,
     private readonly logger: WinstonLoggerService,
   ) {
-    this.logger.setContext(DatabaseService.name);
+    this.logger = new WinstonLoggerService(DatabaseService.name);
   }
   async onModuleInit() {
     try {
