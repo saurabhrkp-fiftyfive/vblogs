@@ -2,7 +2,6 @@ import {
   Injectable,
   OnModuleInit,
   OnApplicationShutdown,
-  Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -13,14 +12,19 @@ import {
   waitUntilBucketExists,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { WinstonLoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class AwsS3Service implements OnModuleInit, OnApplicationShutdown {
   private s3Client: S3Client;
   private bucketName: string;
-  private readonly logger = new Logger(AwsS3Service.name);
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly logger: WinstonLoggerService,
+  ) {
+    this.logger = new WinstonLoggerService(AwsS3Service.name);
+  }
 
   async onModuleInit() {
     try {
