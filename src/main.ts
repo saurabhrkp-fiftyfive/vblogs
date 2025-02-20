@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './modules/app/app.module';
 import { ConfigService } from '@nestjs/config';
 import { WinstonLoggerService } from './infra/logger/logger.service';
 import { LoggingInterceptor } from './infra/loggerInterceptor/loggerInterceptor.service';
