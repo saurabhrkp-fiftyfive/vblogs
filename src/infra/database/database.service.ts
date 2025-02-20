@@ -4,12 +4,12 @@ import {
   OnApplicationShutdown,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import mongoose, { Connection } from 'mongoose';
+import mongoose from 'mongoose';
 import { WinstonLoggerService } from '../logger/logger.service';
 
 @Injectable()
 export class DatabaseService implements OnModuleInit, OnApplicationShutdown {
-  private connection: Connection;
+  private static isConnected = false; // Ensure only one connection is created
 
   constructor(
     private readonly configService: ConfigService,
@@ -19,30 +19,37 @@ export class DatabaseService implements OnModuleInit, OnApplicationShutdown {
   }
   async onModuleInit() {
     try {
-      const databaseURI = this.configService.get<string>('databaseURI');
-      // Check if databaseURI is undefined before passing it to mongoose.connect
-      if (databaseURI) {
-        mongoose.connection.on('connected', () =>
-          this.logger.log('Database connected successfully.'),
+      if (DatabaseService.isConnected) {
+        this.logger.log(
+          'Database already connected, reusing existing connection.',
         );
-        mongoose.connection.on('open', () =>
-          this.logger.log('Database Connection Open.'),
-        );
-        mongoose.connection.on('disconnected', () =>
-          this.logger.log('Database disconnected'),
-        );
-        mongoose.connection.on('reconnected', () =>
-          this.logger.log('Database reconnected'),
-        );
-        mongoose.connection.on('disconnecting', () =>
-          this.logger.log('Database disconnecting'),
-        );
-
-        await mongoose.connect(databaseURI);
-        this.connection = mongoose.connection;
-      } else {
-        this.logger.error('Database URI is undefined.');
+        return;
       }
+      const databaseURI = this.configService.get<string>('databaseURI');
+      if (!databaseURI) {
+        this.logger.error('Database URI is undefined.');
+        return;
+      }
+
+      mongoose.connection.on('connected', () =>
+        this.logger.log('Database connected successfully.'),
+      );
+      mongoose.connection.on('open', () =>
+        this.logger.log('Database Connection Open.'),
+      );
+      mongoose.connection.on('disconnected', () =>
+        this.logger.log('Database disconnected'),
+      );
+      mongoose.connection.on('reconnected', () =>
+        this.logger.log('Database reconnected'),
+      );
+      mongoose.connection.on('disconnecting', () =>
+        this.logger.log('Database disconnecting'),
+      );
+
+      await mongoose.connect(databaseURI);
+
+      DatabaseService.isConnected = true; // Mark connection as established
     } catch (error: unknown) {
       this.logger.error('Database connection failed', error as Error);
     }
