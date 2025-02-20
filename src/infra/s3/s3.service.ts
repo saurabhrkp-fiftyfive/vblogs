@@ -52,8 +52,8 @@ export class AwsS3Service implements OnModuleInit, OnApplicationShutdown {
       );
 
       this.logger.log('AWS S3 client initialized.');
-    } catch (error) {
-      this.logger.error('AWS S3 initialization failed', error);
+    } catch (error: unknown) {
+      this.logger.error('AWS S3 initialization failed', error as Error);
     }
   }
 
@@ -69,8 +69,8 @@ export class AwsS3Service implements OnModuleInit, OnApplicationShutdown {
       await this.s3Client.send(command);
       this.logger.log(`File uploaded to S3: ${this.bucketName}/${key}`);
       return { key };
-    } catch (error) {
-      this.logger.error('File upload failed', error);
+    } catch (error: unknown) {
+      this.logger.error('File upload failed', error as Error);
       throw error;
     }
   }
@@ -85,8 +85,8 @@ export class AwsS3Service implements OnModuleInit, OnApplicationShutdown {
       const response = await this.s3Client.send(command);
       this.logger.log(`File retrieved from S3: ${this.bucketName}/${key}`);
       return response;
-    } catch (error) {
-      this.logger.error('Error retrieving file', error);
+    } catch (error: unknown) {
+      this.logger.error('Error retrieving file', error as Error);
       throw error;
     }
   }
@@ -100,8 +100,8 @@ export class AwsS3Service implements OnModuleInit, OnApplicationShutdown {
 
       await this.s3Client.send(command);
       this.logger.log(`File deleted from S3: ${this.bucketName}/${key}`);
-    } catch (error) {
-      this.logger.error('Error deleting file', error);
+    } catch (error: unknown) {
+      this.logger.error('Error deleting file', error as Error);
       throw error;
     }
   }
@@ -113,15 +113,14 @@ export class AwsS3Service implements OnModuleInit, OnApplicationShutdown {
         Key: key,
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
       const url: string = await getSignedUrl(this.s3Client, command, {
         expiresIn: expiresInSeconds,
       });
 
       this.logger.log(`Generated signed URL for: ${this.bucketName}/${key}`);
       return url;
-    } catch (error) {
-      this.logger.error('Error generating signed URL', error);
+    } catch (error: unknown) {
+      this.logger.error('Error generating signed URL', error as Error);
       throw error;
     }
   }
